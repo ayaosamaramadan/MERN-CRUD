@@ -1,12 +1,13 @@
-
+import Formdata from './components/Formdata'
 import './App.css'
 
 function App() {
 
   return (
-  <>
-  <p className='text-red-500'>aya</p>
-  </>
+<>
+<Formdata/>
+</>
+  
   )
 }
 
