@@ -9,6 +9,7 @@ const app = express();
 
 // Middleware
 app.use(cors());
+app.use(express.json());
 
 // port
 const PORT = process.env.PORT || 5000;
@@ -42,6 +43,14 @@ app.get("/", async(req, res) => {
   const data = await userModel.find({});
   res.json({success:true, data:data});
   // res.send(data); 
+});
+
+// create data
+app.post("/create", async(req, res) => {
+const data = new userModel(req.body);
+  await data.save();
+  res.send({success:true, data:"data created"});
+  console.log(req.body);
 });
 
 // start the server
