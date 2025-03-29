@@ -41,16 +41,21 @@ const userModel = mongoose.model("usero", userSchema);
 // read data
 app.get("/", async(req, res) => {
   const data = await userModel.find({});
-  res.json({success:true, data:data});
-  // res.send(data); 
+  res.json({success:true, data:data}); 
 });
 
 // create data
 app.post("/create", async(req, res) => {
 const data = new userModel(req.body);
   await data.save();
-  res.send({success:true, data:"data created"});
+  res.send({success:true, data:"data created",data : data} );
   console.log(req.body);
+});
+
+// update data
+app.put("/update", async (req, res) => {
+  const data = await userModel.findByIdAndUpdate(req.body._id, req.body, { new: true });
+  res.json({ success: true, message: "Data updated", data });
 });
 
 // start the server
