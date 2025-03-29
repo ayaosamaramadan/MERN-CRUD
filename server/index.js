@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 5000;
 // MongoDB connection
 const uri = process.env.MONGODB_URI ;
 
+// MongoDB connect
 mongoose.set("strictQuery", true);
 
 mongoose.connect(uri).then(() => {console.log("Connected to MongoDB");})
@@ -23,6 +24,18 @@ mongoose.connect(uri).then(() => {console.log("Connected to MongoDB");})
     console.error("Error connecting to MongoDB", err);
   });
 
+
+
+// schema
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  phone:Number ,
+},{
+  timestamps: true,
+});
+
+const userModel = mongoose.model("usero", userSchema);
 
 // root route
 app.get("/", (req, res) => {
