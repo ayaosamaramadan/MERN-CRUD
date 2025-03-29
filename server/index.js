@@ -37,9 +37,11 @@ const userSchema = new mongoose.Schema({
 
 const userModel = mongoose.model("usero", userSchema);
 
-// root route
-app.get("/", (req, res) => {
-  res.send("ososa");
+// read data
+app.get("/", async(req, res) => {
+  const data = await userModel.find({});
+  res.json({success:true, data:data});
+  // res.send(data); 
 });
 
 // start the server
