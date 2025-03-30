@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { datatype } from "../types/data";
+import { MdDeleteOutline } from "react-icons/md";
 
 const Formdata = () => {
   const [show, setShow] = useState(false);
@@ -56,6 +57,19 @@ const Formdata = () => {
       [name]: value,
     }));
   };
+
+  const handleDelete = async (id:string) => {
+    try {
+      // DELETE request to delete data
+      await axios.delete(`http://localhost:5000/delete/${id}`);
+      toast.success("Data deleted successfully!");
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      toast.error("Error deleting data. Please try again.");
+    }
+  }
+
 
   return (
     <>
@@ -128,6 +142,7 @@ const Formdata = () => {
               <th className="bg-purple-500 text-white px-4 py-2">Name</th>
               <th className="bg-purple-500 text-white px-4 py-2">Email</th>
               <th className="bg-purple-500 text-white px-4 py-2">Phone</th>
+              <th className="bg-purple-500 text-white px-4 py-2">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -136,6 +151,10 @@ const Formdata = () => {
                 <td className="border px-4 py-2">{item.name}</td>
                 <td className="border px-4 py-2">{item.email}</td>
                 <td className="border px-4 py-2">{item.phone}</td>
+
+                <td className="border px-4 py-2">
+                  <MdDeleteOutline onClick={()=>handleDelete(item._id)} />
+                </td>
               </tr>
             ))}
           </tbody>
