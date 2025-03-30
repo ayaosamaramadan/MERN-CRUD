@@ -37,6 +37,7 @@ const userModel = mongoose.model("usero", userSchema);
 app.get("/", async(req, res) => {
   const data = await userModel.find({});
   res.json({success:true, data:data}); 
+  
 });
 
 // create data
@@ -57,6 +58,7 @@ app.delete("/delete/:id", async (req, res) => {
   const data = await userModel.findByIdAndDelete(req.params.id);
   res.json({ success: true, message: "Data deleted", data });
 });
+
 
 // start the server
 app.listen(PORT, () => {
