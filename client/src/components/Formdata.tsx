@@ -1,16 +1,32 @@
+import axios from "axios";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import { toast } from "react-toastify";
 
 const Formdata = () => {
   const [show, setShow] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-  } );
+  });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    try {
+    
+      await axios.post("http://localhost:5000/create", formData);
+
+      toast.success("Data submitted successfully!");
+   
+      setFormData({ name: "", email: "", phone: "" });
+      setShow(false);
+
+    } catch (error) {
+      if (error) toast.error("Error, Please try again.");
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +36,7 @@ const Formdata = () => {
       [name]: value,
     }));
     console.log(formData);
-  }
+  };
 
   return (
     <>
@@ -47,8 +63,8 @@ const Formdata = () => {
           <label htmlFor="name" className="block text-white font-bold mb-2">
             Name
           </label>
-          <input 
-          onChange={handleChange}
+          <input
+            onChange={handleChange}
             type="text"
             id="name"
             name="name"
@@ -57,8 +73,8 @@ const Formdata = () => {
           <label htmlFor="email" className="block text-white font-bold mb-2">
             Email
           </label>
-          <input 
-          onChange={handleChange}
+          <input
+            onChange={handleChange}
             type="email"
             id="email"
             name="email"
@@ -67,8 +83,8 @@ const Formdata = () => {
           <label htmlFor="phone" className="block text-white font-bold mb-2">
             Phone
           </label>
-          <input 
-          onChange={handleChange}
+          <input
+            onChange={handleChange}
             type="number"
             id="phone"
             name="phone"
