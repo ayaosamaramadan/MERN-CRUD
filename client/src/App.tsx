@@ -1,14 +1,11 @@
-import Formdata from './components/Formdata'
-import './App.css'
+import "./App.css";
+import Formdata from "./components/Formdata";
 
 function App() {
-
+ 
   return (
-<>
-<Formdata/>
-</>
-  
-  )
+  <Formdata/>
+  );
 }
 
-export default App
+export default App;
