@@ -4,22 +4,30 @@ import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { datatype } from "../types/data";
+import { formdatatype } from "../types/data";
 import { MdDeleteOutline } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
 
 const Formdata = () => {
   const [show, setShow] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<formdatatype>({
     name: "",
     email: "",
-    phone: "",
+    phone: null,
+  });
+
+  const [EditData, setEditData] = useState<formdatatype>({
+    name: "",
+    email: "",
+    phone: null,
+    id: "",
   });
 
   const [data, setData] = useState<datatype[]>([]);
 
   const fetchData = async () => {
     try {
-      // GET request to fetch data
-      const response = await axios.get("http://localhost:5000/");
+     const response = await axios.get("http://localhost:5000/");
       setData(response.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -35,15 +43,25 @@ const Formdata = () => {
     event.preventDefault();
 
     try {
-      // POST request to create data
-      await axios.post("http://localhost:5000/create", formData);
+      if (EditData.id) {
+       await axios.put(`http://localhost:5000/update`, {
+          _id: EditData.id,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+        });
 
-      toast.success("Data submitted successfully!");
+        toast.success("Data updated successfully!");
+      } else {
+        await axios.post("http://localhost:5000/create", formData);
+        toast.success("Data submitted successfull");
+      }
 
-      setFormData({ name: "", email: "", phone: "" });
+      setFormData({ name: "", email: "", phone: null });
+      setEditData({ name: "", email: "", phone: null, id: "" });
       setShow(false);
 
-      fetchData();
+     fetchData();
     } catch (error) {
       console.error("Error submitting data:", error);
       toast.error("Error submitting data. Please try again.");
@@ -58,9 +76,8 @@ const Formdata = () => {
     }));
   };
 
-  const handleDelete = async (id:string) => {
+  const handleDelete = async (id: string) => {
     try {
-      // DELETE request to delete data
       await axios.delete(`http://localhost:5000/delete/${id}`);
       toast.success("Data deleted successfully!");
       fetchData();
@@ -68,8 +85,30 @@ const Formdata = () => {
       console.error("Error deleting data:", error);
       toast.error("Error deleting data. Please try again.");
     }
-  }
+  };
 
+  const handleEdit = (id: string) => {
+   
+    const itemToEdit = data.find((item) => item._id === id);
+
+    if (itemToEdit) {
+     setFormData({
+        name: itemToEdit.name,
+        email: itemToEdit.email,
+        phone: itemToEdit.phone,
+      });
+
+     setEditData({
+        name: itemToEdit.name,
+        email: itemToEdit.email,
+        phone: itemToEdit.phone,
+        id: itemToEdit._id,
+      });
+
+      // Show the form
+      setShow(true);
+    }
+  };
 
   return (
     <>
@@ -123,7 +162,7 @@ const Formdata = () => {
             type="number"
             id="phone"
             name="phone"
-            value={formData.phone}
+            value={formData.phone ?? ""}
             className="w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-purple-950"
           />
           <button
@@ -142,18 +181,37 @@ const Formdata = () => {
               <th className="bg-purple-500 text-white px-4 py-2">Name</th>
               <th className="bg-purple-500 text-white px-4 py-2">Email</th>
               <th className="bg-purple-500 text-white px-4 py-2">Phone</th>
-              <th className="bg-purple-500 text-white px-4 py-2">Delete</th>
+              <th className="bg-purple-500 text-white px-4 py-2"></th>
             </tr>
           </thead>
           <tbody>
             {data.map((item: datatype, index: number) => (
-              <tr key={index} className="hover:bg-gray-100">
+              <tr
+                key={index}
+                className="hover:bg-opacity-40 bg-purple-900 bg-opacity-15"
+              >
                 <td className="border px-4 py-2">{item.name}</td>
                 <td className="border px-4 py-2">{item.email}</td>
                 <td className="border px-4 py-2">{item.phone}</td>
 
-                <td className="border px-4 py-2">
-                  <MdDeleteOutline onClick={()=>handleDelete(item._id)} />
+                <td className="flex border px-4 py-2 text-center">
+                  <button
+                    onClick={() => {
+                      handleEdit(item._id);
+                      setShow(true);
+                    }}
+                    className="mr-4 text-[1rem] flex items-center justify-center text-emerald-300 hover:text-emerald-700 transition-transform duration-300 transform hover:scale-110"
+                    title="Edit"
+                  >
+                    <FaRegEdit className="text-[1.25rem]" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="flex items-center justify-center text-red-800 hover:text-red-700 transition-transform duration-300 transform hover:scale-110"
+                    title="Delete"
+                  >
+                    <MdDeleteOutline className="text-[1.5rem]" />
+                  </button>
                 </td>
               </tr>
             ))}
