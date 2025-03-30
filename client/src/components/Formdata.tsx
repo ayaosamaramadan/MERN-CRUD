@@ -27,7 +27,7 @@ const Formdata = () => {
 
   const fetchData = async () => {
     try {
-     const response = await axios.get("http://localhost:5000/");
+     const response = await axios.get("https://mern-crud-eight-eta.vercel.app/");
       setData(response.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -44,7 +44,7 @@ const Formdata = () => {
 
     try {
       if (EditData.id) {
-       await axios.put(`http://localhost:5000/update`, {
+       await axios.put(`https://mern-crud-eight-eta.vercel.app/update`, {
           _id: EditData.id,
           name: formData.name,
           email: formData.email,
@@ -53,7 +53,7 @@ const Formdata = () => {
 
         toast.success("Data updated successfully!");
       } else {
-        await axios.post("http://localhost:5000/create", formData);
+        await axios.post("https://mern-crud-eight-eta.vercel.app/create", formData);
         toast.success("Data submitted successfull");
       }
 
@@ -78,7 +78,7 @@ const Formdata = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/delete/${id}`);
+      await axios.delete(`https://mern-crud-eight-eta.vercel.app/delete/${id}`);
       toast.success("Data deleted successfully!");
       fetchData();
     } catch (error) {
